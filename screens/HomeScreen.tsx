@@ -44,10 +44,17 @@ const HomeScreen=()=> {
       label: "coffee9"
     }
   ]
-  const CarouselData = [
+  interface PopularDataProp{
+    id: number;
+    headerText?: string;
+    subText: string;
+    image: any;
+
+  }
+  const popularData:Array<PopularDataProp> = [
     {
       id:1,
-      headerText: null,
+      headerText:  'Header Text Two',
       subText: 'Sub Text One',
       image: Images.coffee1,
     },
@@ -59,7 +66,7 @@ const HomeScreen=()=> {
     },
     {
       id:3,
-      headerText: null,
+      headerText:  'Header Text Two',
       subText: 'Sub Text Three',
       image: Images.coffee3,
     },
@@ -74,15 +81,45 @@ const HomeScreen=()=> {
       headerText: 'Header Text Five',
       subText: 'Sub Text Five',
       image: Images.coffee2,
+    },
+    {
+      id:6,
+      headerText: 'Header Text Six',
+      subText: 'Sub Text Six',
+      image: Images.coffee6,
+    },
+    {
+      id:7,
+      headerText: 'Header Text seven',
+      subText: 'Sub Text seven',
+      image: Images.coffee7,
+    },
+    {
+      id:8,
+      headerText: 'Header Text Eight',
+      subText: 'Sub Text Eight',
+      image: Images.coffee8,
     }
   ]
   
-const data = [
+  interface CarouselDataProp {
+    id: number;
+    name: string;
+    url: string;
+}
+
+const carouselData:Array<CarouselDataProp> = [
   {id: 1, name: 'React JS', url: 'https://icon-library.com/images/react-icon/react-icon-29.jpg'},
   {id: 2, name: 'JavaScript', url: 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Javascript_Logo.png'},
   {id: 3, name: 'Node JS', url: 'https://upload.wikimedia.org/wikipedia/commons/6/67/NodeJS.png'},
 ];
-  const renderItem = ({item}:any) => {
+
+const SizeBox = ({w,h}:{w?:number,h?:number})=>{
+    const style = {width:0,height:0}
+    return <View style={{...style,width:w,height:h}}>
+    </View>
+}
+  const renderItem = ({url,name}:CarouselDataProp) => {
     return (
       <View
         style={{
@@ -95,24 +132,23 @@ const data = [
           alignItems: 'center',
           backgroundColor: 'green',
         }}>
-        <Image source={{uri: item.url}} style={{width: 100, height: 100}} />
+        <Image source={{uri: url}} style={{width: 100, height: 100}} />
         <Text style={{marginVertical: 10, fontSize: 20, fontWeight: 'bold',color:'black'}}>
-          {item.name}
+          {name}
         </Text>
       </View>
     );
   }
-  const renderPopularItem=({image,subText}:any)=>{
+  const renderPopularItem=({id,image,subText}:PopularDataProp)=>{
     return(
       <View
          style={{
-          marginVertical:30,
-          marginHorizontal:10,
           borderWidth: 1,
-          borderColor:'gold',
+          borderColor:id%2==0?(id%3==0?'green':'pink'):'purple',
           padding: 5,
           borderRadius: 15,
           alignItems: 'center',
+          marginBottom: 20
         }}>
         <Image source={image} style={{width: 140, height: 150,borderRadius:5}} />
         <Text style={{marginVertical: 10, fontSize: 16, fontWeight: 'bold',color:'gray'}}>
@@ -128,13 +164,14 @@ const data = [
       <Carousel
           loop={true}
           autoplay={true}
-          data={data}
-          renderItem={(renderItem)}
+          data={carouselData}
+          renderItem={({item}:{item:CarouselDataProp})=>renderItem(item)}
           sliderWidth={SLIDER_WIDTH}
           itemWidth={ITEM_WIDTH}
         />
     </View>
-    <Text>Products:</Text>
+    <Text style={{marginLeft:30}}>Products:</Text>
+    <SizeBox h={20}/>
     <ScrollView horizontal={true} style={styles.imgsScrollX}>    
     {
       imgs.map(({img,label})=>{
@@ -148,14 +185,15 @@ const data = [
       })
     }
     </ScrollView>
-    <Text>Popular:</Text>
+    <Text style={{marginLeft:30}}>Popular:</Text>
+    <SizeBox h={20}/>
     <FlatList
-      data={CarouselData}
-      renderItem={({item}:any)=>renderPopularItem(item)}
-      keyExtractor={(item:any) => item.id}
+      data={popularData}
+      renderItem={({item}:{item:PopularDataProp})=>renderPopularItem(item)}
+      keyExtractor={(item:PopularDataProp) => item.id.toString()}
       numColumns={2}
       columnWrapperStyle={{ justifyContent: 'space-between' }}
-      contentContainerStyle={{ marginHorizontal: 20 }}
+      contentContainerStyle={{ marginHorizontal: 20}}
     />
   </View>
   </ScrollView>
@@ -169,7 +207,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   carousell: {
     width:'100%',
